@@ -1,0 +1,46 @@
+{
+  "name": "wenku8",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "AGPL 3.0",
+  "scripts": {
+    "gen:gql": "graphql-codegen",
+    "dev": "next",
+    "prebuild": "rm -rf ./.next",
+    "build": "next build",
+    "export": "next export",
+    "prebuild:docker": "npm run build && npm run export && npm pack",
+    "build:docker": "docker build . -t shynome/wenku8"
+  },
+  "files": [
+    ".next",
+    "!.next/cache",
+    "out",
+    "graphql",
+    "server.mjs",
+    "yarn.lock"
+  ],
+  "dependencies": {
+    "apollo-server-micro": "^2.17.0",
+    "cheerio": "^1.0.0-rc.3",
+    "graphql": "^15.3.0",
+    "iconv-lite": "^0.6.2",
+    "next": "^9.5.3",
+    "send": "^0.17.1"
+  },
+  "devDependencies": {
+    "@apollo/client": "^3.1.4",
+    "@graphql-codegen/cli": "^1.17.8",
+    "@graphql-codegen/introspection": "^1.17.8",
+    "@graphql-codegen/typescript-operations": "^1.17.8",
+    "@graphql-codegen/typescript-resolvers": "^1.17.9",
+    "@material-ui/core": "^4.11.0",
+    "@material-ui/icons": "^4.9.1",
+    "@types/cheerio": "^0.22.21",
+    "@types/react": "^16.9.49",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "typescript": "^4.0.2",
+    "unstated-next": "^1.1.0"
+  }
+}

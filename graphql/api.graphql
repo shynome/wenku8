@@ -1,0 +1,34 @@
+type Query {
+  "bid 如 `https://www.wenku8.net/book/1861.htm` 中的 `1861`"
+  Book(bid: String!): Book!
+  ChapterContent(bid: String!, cid: String!): String!
+}
+
+type Book {
+  "如 `https://www.wenku8.net/novel/1/1861/index.htm` 中的 `1861`"
+  bid: String!
+  name: String!
+  chaptersVols: [ChaptersVol!]!
+}
+
+type ChaptersVol {
+  "如: 第四卷, 外传 xxx"
+  name: String!
+  "排序"
+  order: Int!
+  chapters: [Chapter!]!
+}
+
+type ChapterContent {
+  name: String!
+  vol: String!
+  content: String!
+}
+
+type Chapter {
+  "章节 id 用以获取内容"
+  cid: String!
+  order: Int!
+  "小章节名, 如: 序章 『开始的余温』"
+  name: String!
+}
