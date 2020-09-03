@@ -1,5 +1,6 @@
 import React, { Fragment } from 'react'
 import App from 'next/app'
+import Head from 'next/head'
 
 import { CssBaseline, LinearProgress, Container } from '@material-ui/core'
 import dynamic from 'next/dynamic'
@@ -15,6 +16,12 @@ export default class MyApp extends App {
 
     return (
       <Fragment>
+        <Head>
+          <meta
+            name="viewport"
+            content="minimum-scale=1, initial-scale=1, width=device-width"
+          />
+        </Head>
         <CssBaseline />
         <Container disableGutters>
           <Provider>
