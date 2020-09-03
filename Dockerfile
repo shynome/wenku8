@@ -13,7 +13,7 @@ FROM node:14.9-alpine as Pkg
 ADD wenku8-*.tgz /app
 
 FROM node:14.9-alpine
-COPY --from=Pkg /app/package /app
 COPY --from=Deps /app/node_modules /app/node_modules
+COPY --from=Pkg /app/package /app
 WORKDIR /app
 CMD [ "node", "server.mjs" ]
