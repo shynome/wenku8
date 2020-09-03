@@ -16,7 +16,7 @@ export default class MyApp extends App {
     return (
       <Fragment>
         <CssBaseline />
-        <Container>
+        <Container disableGutters>
           <Provider>
             {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
             <Component {...pageProps} />
