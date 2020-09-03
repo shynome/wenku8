@@ -38,25 +38,40 @@ const q = gql`
   }
 `
 
+const makeGetFirstCid = (indexes: [string, number][]) => (
+  v: number,
+): string => {
+  for (let i = 0; i < indexes.length; i++) {
+    let [cid, vorder] = indexes[i]
+    if (vorder === v) {
+      return cid
+    }
+  }
+}
+
 const Nav: React.FC<{ book: Book; cid: string }> = memo(({ book, cid }) => {
   const bid = book.bid
-  const allChapters = book.chaptersVols.reduce((arr, vol) => {
-    return arr.concat(vol.chapters)
-  }, [] as Chapter[])
-  const index = allChapters.map((chapter) => chapter.cid).indexOf(cid)
-  const pChapter = allChapters[index - 1]
-  const nChapter = allChapters[index + 1]
-  let prevLink = pChapter ? `/reader?bid=${bid}&cid=${pChapter.cid}` : ``
-  let nextLink = nChapter ? `/reader?bid=${bid}&cid=${nChapter.cid}` : ``
+  const vols = book.chaptersVols
+  const indexes = vols.reduce((arr, vol) => {
+    return arr.concat(vol.chapters.map((c) => [c.cid, vol.order]))
+  }, [] as [string, number][])
+  const cindex = indexes.map(([cid]) => cid).indexOf(cid)
+  const index = indexes[cindex][1]
+  const getFirstCid = makeGetFirstCid(indexes)
+
+  const pVol = vols[index - 1]
+  const nVol = vols[index + 1]
+  let prevLink = pVol ? `/reader?bid=${bid}&cid=${getFirstCid(index - 1)}` : ``
+  let nextLink = nVol ? `/reader?bid=${bid}&cid=${getFirstCid(index + 1)}` : ``
   return (
     <div style={{ whiteSpace: 'nowrap' }}>
       <NextLink href={prevLink}>
         <Link
           color="inherit"
           href={prevLink}
-          style={{ visibility: pChapter ? 'visible' : 'hidden' }}
+          style={{ visibility: pVol ? 'visible' : 'hidden' }}
         >
-          <Tooltip title={`上一卷 - ${pChapter?.name || ''}`}>
+          <Tooltip title={`上一卷 - ${pVol?.name || ''}`}>
             <IconButton color="inherit">
               <ChevronLeftIcon />
             </IconButton>
@@ -67,9 +82,9 @@ const Nav: React.FC<{ book: Book; cid: string }> = memo(({ book, cid }) => {
         <Link
           color="inherit"
           href={nextLink}
-          style={{ visibility: nChapter ? 'visible' : 'hidden' }}
+          style={{ visibility: nVol ? 'visible' : 'hidden' }}
         >
-          <Tooltip title={`下一卷  - ${nChapter?.name || ''}`}>
+          <Tooltip title={`下一卷  - ${nVol?.name || ''}`}>
             <IconButton color="inherit">
               <ChevronRightIcon />
             </IconButton>
