@@ -24,6 +24,7 @@ const useStyles = makeStyles((theme) => ({
     whiteSpace: 'break-spaces',
     padding: theme.spacing(2),
     marginBottom: theme.spacing(3),
+    overflow: 'scroll',
   },
 }))
 const Reader: React.FC<{ content: string }> = ({ content }) => {
@@ -48,7 +49,7 @@ const Nav: React.FC<{ book: Book; cid: string }> = memo(({ book, cid }) => {
   let prevLink = pChapter ? `/reader?bid=${bid}&cid=${pChapter.cid}` : ``
   let nextLink = nChapter ? `/reader?bid=${bid}&cid=${nChapter.cid}` : ``
   return (
-    <Fragment>
+    <div style={{ whiteSpace: 'nowrap' }}>
       <NextLink href={prevLink}>
         <Link
           color="inherit"
@@ -75,7 +76,7 @@ const Nav: React.FC<{ book: Book; cid: string }> = memo(({ book, cid }) => {
           </Tooltip>
         </Link>
       </NextLink>
-    </Fragment>
+    </div>
   )
 })
 
