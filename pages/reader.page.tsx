@@ -24,7 +24,7 @@ const useStyles = makeStyles((theme) => ({
     whiteSpace: 'break-spaces',
     padding: theme.spacing(2),
     marginBottom: theme.spacing(3),
-    overflow: 'scroll',
+    overflowX: 'scroll',
   },
 }))
 const Reader: React.FC<{ content: string }> = ({ content }) => {
