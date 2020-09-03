@@ -1,2 +1,4 @@
 *
 !*.tgz
+!yarn.lock
+!package.json
