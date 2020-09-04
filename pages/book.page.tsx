@@ -79,9 +79,8 @@ export default function Page({ book }: Props) {
 }
 
 import { getChaptersVol, getLink } from './api/getChaptersVol'
-import { NextPageContext } from 'next'
 import { withCache } from './with-cache'
-export const getServerSideProps = withCache(async (ctx: NextPageContext) => {
+export const getServerSideProps = withCache(async (ctx) => {
   const bid = ctx.query['bid'] as string
   const link = await getLink(bid)
   const book = await getChaptersVol(link)
