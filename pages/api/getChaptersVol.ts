@@ -61,3 +61,8 @@ export async function getChaptersVol(link: string): Promise<Book> {
     chaptersVols: vols,
   }
 }
+
+export async function getBook(bid: string) {
+  const link = await getLink(bid)
+  return getChaptersVol(link)
+}

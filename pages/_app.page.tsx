@@ -3,12 +3,6 @@ import App from 'next/app'
 import Head from 'next/head'
 
 import { CssBaseline, LinearProgress, Container } from '@material-ui/core'
-import dynamic from 'next/dynamic'
-
-const Provider = dynamic(() => import('./_provider'), {
-  loading: () => <LinearProgress />,
-  ssr: false,
-})
 
 export default class MyApp extends App {
   render() {
@@ -24,10 +18,8 @@ export default class MyApp extends App {
         </Head>
         <CssBaseline />
         <Container disableGutters>
-          <Provider>
-            {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
-            <Component {...pageProps} />
-          </Provider>
+          {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
+          <Component {...pageProps} />
         </Container>
       </Fragment>
     )

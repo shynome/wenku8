@@ -1,7 +1,5 @@
 import { Book, Chapter } from '~graphql/codegen'
 import { useRouter } from 'next/router'
-import { gql, useQuery } from '@apollo/client'
-import { queryBook } from './book.page'
 import {
   Typography,
   Paper,
@@ -17,7 +15,6 @@ import ChevronRightIcon from '@material-ui/icons/ChevronRight'
 import Head from 'next/head'
 import NextLink from 'next/link'
 import { Fragment, memo, useMemo } from 'react'
-import clsx from 'clsx'
 
 const useStyles = makeStyles((theme) => ({
   reader: {
@@ -31,12 +28,6 @@ const Reader: React.FC<{ content: string }> = ({ content }) => {
   const classes = useStyles()
   return <Paper className={classes.reader}>{content}</Paper>
 }
-
-const q = gql`
-  query content($bid: String!, $cid: String!) {
-    content: ChapterContent(bid: $bid, cid: $cid)
-  }
-`
 
 const makeGetFirstCid = (indexes: [string, number][]) => (
   v: number,
@@ -96,29 +87,18 @@ const Nav: React.FC<{ book: Book; cid: string }> = memo(({ book, cid }) => {
 })
 
 import { Topbar } from '~pages/components/Topbar'
-export default function Page() {
+type Props = { book: Book; content: string }
+export default function Page({ book, content }: Props) {
   const router = useRouter()
   const bid = router.query['bid'] as string
   const cid = router.query['cid'] as string
-  const cq = useQuery<{ content: string }>(q, { variables: { bid, cid } })
-  const bq = useQuery<{ book: Book }>(queryBook, { variables: { bid } })
   const title = useMemo(() => {
-    if (bq.loading || bq.error) {
-      return ''
-    }
-    const allChapters = bq.data.book.chaptersVols.reduce((arr, vol) => {
+    const allChapters = book.chaptersVols.reduce((arr, vol) => {
       return arr.concat(vol.chapters)
     }, [] as Chapter[])
     const chapter = allChapters.filter((chapter) => chapter.cid === cid)[0]
-    return `${chapter.name} - ${bq.data.book.name}`
-  }, [bq, cid])
-  if (cq.loading || bq.loading) {
-    return <LinearProgress />
-  }
-  let err = cq.error || bq.error
-  if (err) {
-    return <div>{err.message}</div>
-  }
+    return `${chapter.name} - ${book.name}`
+  }, [])
   return (
     <div>
       <Topbar
@@ -130,12 +110,30 @@ export default function Page() {
           </NextLink>
         }
       >
-        <Nav book={bq.data.book} cid={cid} />
+        <Nav book={book} cid={cid} />
       </Topbar>
       <Head>
         <title>{title}</title>
       </Head>
-      <Reader content={cq.data.content} />
+      <Reader content={content} />
     </div>
   )
+}
+
+import { NextPageContext } from 'next'
+import { getChapterContent } from './api/getChapterContent'
+import { getBook } from './api/getChaptersVol'
+export async function getServerSideProps(ctx: NextPageContext) {
+  const bid = ctx.query['bid'] as string
+  const cid = ctx.query['cid'] as string
+  const [book, content] = await Promise.all([
+    getBook(bid),
+    getChapterContent(bid, cid),
+  ])
+  return {
+    props: {
+      book,
+      content,
+    } as Props,
+  }
 }

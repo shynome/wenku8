@@ -15,7 +15,6 @@ import {
 } from '@material-ui/core'
 import { Book } from '~graphql/codegen'
 import NextLink from 'next/link'
-import { useQuery, gql } from '@apollo/client'
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -58,51 +57,38 @@ export const BookInfo: React.FC<{ book: Book }> = ({ book }) => {
   )
 }
 
-export const queryBook = gql`
-  query getBook($bid: String!) {
-    book: Book(bid: $bid) {
-      bid
-      name
-      chaptersVols {
-        name
-        order
-        chapters {
-          cid
-          name
-        }
-      }
-    }
-  }
-`
-
-import { useRouter } from 'next/router'
 import Head from 'next/head'
-function Page() {
+type Props = { book: Book }
+export default function Page({ book }: Props) {
   const classes = useStyles()
-  const bid = useRouter().query['bid']
-  const { loading, error, data } = useQuery<{ book: Book }>(queryBook, {
-    variables: { bid },
-  })
-  if (loading) {
-    return <LinearProgress />
-  }
-  if (error) {
-    return <div>{error.message}</div>
-  }
   return (
     <Paper>
       <AppBar position="sticky">
         <Toolbar>
-          <Typography>{data.book.name}</Typography>
+          <Typography>{book.name}</Typography>
         </Toolbar>
       </AppBar>
       <Head>
-        <title>{data.book.name}</title>
+        <title>{book.name}</title>
       </Head>
       <div className={classes.paper}>
-        <BookInfo book={data.book} />
+        <BookInfo book={book} />
       </div>
     </Paper>
   )
 }
-export default Page
+
+import { getChaptersVol, getLink } from './api/getChaptersVol'
+import { NextPageContext } from 'next'
+export async function getServerSideProps(
+  ctx: NextPageContext,
+): Promise<{ props: Props }> {
+  const bid = ctx.query['bid'] as string
+  const link = await getLink(bid)
+  const book = await getChaptersVol(link)
+  return {
+    props: {
+      book,
+    },
+  }
+}
