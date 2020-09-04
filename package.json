@@ -9,16 +9,13 @@
     "prebuild": "rm -rf ./.next",
     "build": "next build",
     "export": "next export",
-    "prebuild:docker": "npm run build && npm run export && npm pack",
+    "prebuild:docker": "npm run build && npm pack",
     "build:docker": "docker build . -t shynome/wenku8"
   },
   "files": [
     ".next",
     "!.next/cache",
-    "out",
-    "graphql",
-    "server.mjs",
-    "yarn.lock"
+    "graphql"
   ],
   "dependencies": {
     "@material-ui/core": "^4.11.0",
