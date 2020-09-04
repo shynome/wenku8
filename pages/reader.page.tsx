@@ -123,7 +123,8 @@ export default function Page({ book, content }: Props) {
 import { NextPageContext } from 'next'
 import { getChapterContent } from './api/getChapterContent'
 import { getBook } from './api/getChaptersVol'
-export async function getServerSideProps(ctx: NextPageContext) {
+import { withCache } from './with-cache'
+export const getServerSideProps = withCache(async (ctx: NextPageContext) => {
   const bid = ctx.query['bid'] as string
   const cid = ctx.query['cid'] as string
   const [book, content] = await Promise.all([
@@ -136,4 +137,4 @@ export async function getServerSideProps(ctx: NextPageContext) {
       content,
     } as Props,
   }
-}
+})
