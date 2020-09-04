@@ -16,4 +16,4 @@ FROM node:14.9-alpine
 COPY --from=Deps /app/node_modules /app/node_modules
 COPY --from=Pkg /app/package /app
 WORKDIR /app
-CMD [ "node", "server.mjs" ]
+CMD [ "yarn", "next", "start" ]
