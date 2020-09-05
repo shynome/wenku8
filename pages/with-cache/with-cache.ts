@@ -1,10 +1,37 @@
 import { GetServerSideProps, GetServerSidePropsContext } from 'next'
-export type WithCache = (gssp: GetServerSideProps) => GetServerSideProps
+import type { ParsedUrlQuery } from 'querystring'
+export type WithCache = (
+  path: string,
+  params: string[],
+) => (gssp: GetServerSideProps) => GetServerSideProps
 
-export function normalizePageURL(url: string) {
-  if (url.startsWith('/_next/data')) {
-    // '/_next/data/ssss/book.json' -> '/book.json'
-    url = url.replace(/^\/_next\/data\/\S+(\/\S+)\.json/, '$1')
+type normalizeURL = (query: ParsedUrlQuery) => string
+
+type Cgssp = (
+  nurl: normalizeURL,
+) => (gssp: GetServerSideProps) => GetServerSideProps
+
+export const makeWithCache = (cgssp: Cgssp): WithCache => {
+  return (path, params) => {
+    const nurl = makeNormalizeURL(path, params)
+    return cgssp(nurl)
   }
-  return url
+}
+
+export const makeNormalizeURL = (
+  path: string,
+  params: string[],
+): normalizeURL => (query) => {
+  let u = new URL(path, 'http://cache')
+  for (let field of params) {
+    let val = query[field]
+    if (Array.isArray(val)) {
+      for (let v of val) {
+        u.searchParams.append(field, v)
+      }
+      continue
+    }
+    u.searchParams.set(field, val)
+  }
+  return u.toString()
 }

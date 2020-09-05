@@ -123,17 +123,19 @@ export default function Page({ book, content }: Props) {
 import { getChapterContent } from './api/getChapterContent'
 import { getBook } from './api/getChaptersVol'
 import { withCache } from './with-cache'
-export const getServerSideProps = withCache(async (ctx) => {
-  const bid = ctx.query['bid'] as string
-  const cid = ctx.query['cid'] as string
-  const [book, content] = await Promise.all([
-    getBook(bid),
-    getChapterContent(bid, cid),
-  ])
-  return {
-    props: {
-      book,
-      content,
-    } as Props,
-  }
-})
+export const getServerSideProps = withCache('/reader', ['bid', 'cid'])(
+  async (ctx) => {
+    const bid = ctx.query['bid'] as string
+    const cid = ctx.query['cid'] as string
+    const [book, content] = await Promise.all([
+      getBook(bid),
+      getChapterContent(bid, cid),
+    ])
+    return {
+      props: {
+        book,
+        content,
+      } as Props,
+    }
+  },
+)

@@ -2,9 +2,10 @@
 
 ## [1.2.1] - 2020-09-05
 
-### Changed
+### FIX
 
 - fix redis cache lock may not be unlocked
+- fix cache cc, now every link hit the same cache
 
 ## [1.2.0] - 2020-09-05
 
