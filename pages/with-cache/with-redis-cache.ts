@@ -22,8 +22,11 @@ export const withRedisCache: WithCache = (gssp) => async (ctx) => {
     return JSON.parse(cr)
   }
   await cache.set(lk, 'lock', 'EX', 30)
-  const result = await gssp(ctx)
-  cache.set(k, JSON.stringify(result))
-  await cache.del(lk)
-  return result as any
+  try {
+    const result = await gssp(ctx)
+    cache.set(k, JSON.stringify(result))
+    return result as any
+  } finally {
+    await cache.del(lk)
+  }
 }

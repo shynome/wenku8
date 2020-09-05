@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.2.1] - 2020-09-05
+
+### Changed
+
+- fix redis cache lock may not be unlocked
+
 ## [1.2.0] - 2020-09-05
 
 ### Changed
