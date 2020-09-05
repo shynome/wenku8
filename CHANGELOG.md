@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.3.0] - 2020-09-05
+
+### CHANGE
+
+- disabled graphql api to avoid being attacked cc
+
 ## [1.2.1] - 2020-09-05
 
 ### FIX

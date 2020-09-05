@@ -21,4 +21,7 @@ const resolvers: Resolvers = {
 
 const s = new ApolloServer({ typeDefs, resolvers })
 
-export default s.createHandler({ path: '/api' })
+// export default s.createHandler({ path: '/api' })
+export default (req, res) => {
+  return res.end('disabled')
+}
