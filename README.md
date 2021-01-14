@@ -1,3 +1,7 @@
+## 不再维护
+
+使用 <https://github.com/shynome/wenku8-flutter> 更好, 能缓存到本地, 离线可看, 保留阅读进度
+
 ## Introduce
 
 read all wenku8 novels, this is too weak and only suitable for personal use.
